@@ -16,442 +16,710 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
+
+#define MAX_PIXELS 9000
+
+typedef struct {
+    int x;
+    int y;
+} Pixel;
+
+Pixel filledPixels[MAX_PIXELS];
+int filledPixelsCount = 0;
+
+void setPixel(int x, int y, GLfloat color[3]) {
+    filledPixels[filledPixelsCount].x = x;
+    filledPixels[filledPixelsCount].y = y;
+    filledPixelsCount++;
+
+    glColor3fv(color);
+    glBegin(GL_POINTS);
+    glVertex2f(x, y);
+    glEnd();
+    glFlush();
+}
+
+void floodFill(int x, int y, GLfloat fillColor[3], GLfloat targetColor[3]) {
+    GLfloat pixelColor[3];
+    glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, pixelColor);
+
+    if (pixelColor[0] != targetColor[0] || pixelColor[1] != targetColor[1] || pixelColor[2] != targetColor[2]) {
+        return;
+    }
+
+    setPixel(x, y, fillColor);
+
+    floodFill(x + 1, y, fillColor, targetColor);
+    floodFill(x - 1, y, fillColor, targetColor);
+    floodFill(x, y + 1, fillColor, targetColor);
+    floodFill(x, y - 1, fillColor, targetColor);
+}
 
 void drawD() {
+     glClear(GL_COLOR_BUFFER_BIT);
+
+    glColor3f(255,191,0); // Establece el color del lápiz en dorado
+   // glColor3f(0, 0, 0);
+    glPointSize(3); // Establece el tamaño del lápiz
+    //drawD(); // Dibuja la letra D
+
+    glFlush();
     /*
             line(0,380 , 700 , 380);
             line(0,320 , 700 , 320);
      */
     //-----------------------------------------------------------------------------Letra D INICIA
     // Dibuja la línea horizontal superior de la letra D
-    line(13, 370, 13, 330);
+    line(11, 370, 11, 330);
     //parte grande
     // Dibuja la curva derecha de la letra D
-    circuloPos(20, 350, 30, -100, 100);
-
-
+    circuloPos(18, 350, 30, -100, 100);
     //parte pequenia
     // Dibuja la curva derecha de la letra D
-    circuloPos(25, 350, 15, -95, 95);
+    circuloPos(23, 350, 15, -95, 95);
 
     // Dibuja la línea horizontl al medioo
-    line(22, 335, 22, 365);
+    line(20, 335, 20, 365);
     //decorcion superior
-    circuloPos(13, 375, 5, 90, 270);
+    circuloPos(11, 375, 5, 90, 270);
     //decoracion inferior
-    circuloPos(13, 325, 5, 90, 275);
-
+    circuloPos(11, 325, 5, 90, 275);
+    /*
+        glPointSize(3); // Establece el tamaño del lápiz
+     */
     //-----------------------------------Letra D TERMINA
     /////-------------------------------------------------- LETRA I
+
     // Dibuja la línea horizontal de la letra I arriba
-    line(55, 380, 70, 380);
+    line(50, 380, 64, 380);
 
 
     //pequenio izquierdo
-    circuloPos(55, 376, 5, 90, 270);
+    circuloPos(50, 376, 5, 90, 270);
 
     //arriba derecha
-    circuloPos(65, 376, 5, -90, 90);
+    circuloPos(60, 376, 5, -90, 90);
     //--------------------------------arriba termina
 
     // Dibuja la línea vertical de la letra I izquierda
-    line(55, 370, 55, 330);
+    line(50, 370, 50, 330);
 
     //abajo 
 
     //pequenia izquierda
-    circuloPos(55, 325, 5, 90, 270);
+    circuloPos(50, 325, 5, 90, 270);
 
     //abajo derecha
-    circuloPos(65, 325, 5, -90, 90);
+    circuloPos(60, 325, 5, -90, 90);
 
     // Dibuja la línea horizontal de la letra I
-    line(55, 320, 65, 320);
+    line(50, 320, 60, 320);
 
     // Dibuja la segunda línea vertical de la letra I derecha
-    line(65, 370, 65, 330);
+    line(60, 370, 60, 330);
+
+
+
     //--------------------------------------TERMINA LETRA I
     //-------------------------------------------------------- LETRA O
     // Dibuja el círculo interior de la letra O
-    circuloPos(92, 360, 8, 10, 170);
+    circuloPos(84, 360, 8, 10, 170);
     // Dibuja el círculo exterior de la letra O
-    circuloPos(92, 360, 20, 10, 170);
+    circuloPos(84, 360, 20, 10, 170);
 
     //abajo
     // Dibuja el círculo interior de la letra O
-    circuloPos(92, 340, 8, 180, 360);
+    circuloPos(84, 340, 8, 180, 360);
 
     // Dibuja el círculo exterior de la letra O
-    circuloPos(92, 340, 20, 180, 360);
+    circuloPos(84, 340, 20, 180, 360);
 
     //izquierda 1
-    line(84, 360, 84, 335);
+    line(76, 360, 76, 335);
     //izquierda 2
-    line(72, 365, 72, 340);
+    line(64, 365, 64, 340);
     //derecha 1
-    line(111, 365, 111, 340);
+    line(103, 363, 103, 340);
     //derecha 2
-    line(99, 360, 99, 335);
+    line(91, 360, 91, 335);
+
+
     //----------------------------TERMINA LETRA O
     //-------------------------------------------LETRA S
     // Dibuja el arco superior de la letra S
     //grande
-    circuloPos(135, 363, 18, 20, 270);
+    circuloPos(125, 363, 18, 20, 270);
 
     //pequenio
-    circuloPos(135, 363, 8, 0, 270);
+    circuloPos(125, 363, 8, 0, 270);
     //punta o complemento d ela s
-    circuloPos(147, 367, 5, -140, 50);
+    circuloPos(137, 367, 5, -140, 50);
 
     // Dibuja el arco inferior de la letra S
     //grande
-    circuloPos(135, 338, 18, -160, 90);
+    circuloPos(125, 338, 18, -160, 90);
 
     //pequenioo
-    circuloPos(135, 338, 8, -170, 90);
+    circuloPos(125, 338, 8, -170, 90);
 
     //termina s bajo
-    circuloPos(124, 333, 5, 10, 170);
+    circuloPos(114, 333, 5, 10, 170);
+
+
     //----------------------------------TERMINA LETRA S
     ///////////////////-------------------------------------- Letra U
     // Dibuja la línea horizontal de la letra u arriba izquierda
-    line(177, 380, 187, 380);
+    line(160, 380, 170, 380);
 
     //pequenio izquierdo
-    circuloPos(177, 376, 5, 100, 270);
+    circuloPos(160, 376, 5, 100, 270);
     //arriba derecha
-    circuloPos(187, 376, 5, -90, 90);
+    circuloPos(170, 376, 5, -90, 90);
 
     //linea izquierda
     //arco inferior de la U exterior 
-    circuloPos(197, 340, 20, -180, 0);
+    circuloPos(180, 340, 20, -180, 0);
     //linea exterio
-    line(177, 340, 177, 372);
+    line(160, 340, 160, 372);
     //linea vertical media
-    line(187, 340, 187, 372);
+    line(170, 340, 170, 372);
     //arco inferior U intrerior
-    circuloPos(197, 340, 10, -180, 0);
+    circuloPos(180, 340, 10, -180, 0);
     //derecho
     //linea horizontal derecha
-    line(207, 340, 207, 372);
+    line(190, 340, 190, 372);
     //pequenio izquierdo
-    circuloPos(207, 376, 5, 100, 270);
+    circuloPos(190, 376, 5, 100, 270);
 
     //arriba derecha
-    circuloPos(217, 376, 5, -90, 90);
+    circuloPos(200, 376, 5, -90, 90);
     //linea vertical media
-    line(207, 380, 217, 380);
+    line(190, 380, 200, 380);
     //linea exterio
 
-    line(217, 340, 217, 372);
+    line(200, 340, 200, 372);
+
     //--------------------------------Termina U
     //-------------------------------------------------------LETRA N
     //pequenio izquierdo
-    circuloPos(230, 376, 5, 100, 270);
+    circuloPos(212, 376, 5, 100, 270);
 
     //linea superior 
-    line(230, 380, 247, 380);
+    line(212, 380, 224, 380);
 
     //vertical izquierda ext
-    line(230, 370, 230, 328);
+    line(212, 370, 212, 328);
 
     //pata 1 de la N
-    circuloPos(230, 325, 5, 100, 270);
+    circuloPos(212, 325, 5, 100, 270);
 
     //arriba derecha
-    circuloPos(242, 325, 5, -90, 90);
+    circuloPos(224, 325, 5, -90, 90);
 
     //linea baja pata 1
-    line(230, 320, 242, 320);
+    line(212, 320, 224, 320);
 
     //vertical izquierda derecha
-    line(241, 365, 241, 327);
+    line(223, 355, 223, 327);
 
     // Dibuja la línea diagonal de la letra N superior
-    line(247, 380, 272, 335);
+    line(223, 380, 249, 335);
 
     // Dibuja la línea diagonal de la letra N interior
-    line(242, 365, 262, 325);
+    line(224, 355, 239, 325);
 
-    circuloPos(272, 330, 10, -160, 0);
+    circuloPos(249, 330, 10, -160, 0);
 
     // Dibuja la línea vertical derecha de la letra N externa
-    line(281, 370, 281, 326);
+    line(258, 370, 258, 326);
 
     // Dibuja la línea vertical derecha de la letra N interna
-    line(271, 370, 271, 335);
+    line(248, 370, 248, 335);
     //decoracion de letra derecha
     //pequenio izquierdo
-    circuloPos(271, 376, 5, 95, 275);
+    circuloPos(248, 376, 5, 95, 275);
 
     //arriba derecha
-    circuloPos(282, 376, 5, -90, 90);
+    circuloPos(258, 376, 5, -90, 90);
 
     //linea de cierre 
-    line(270, 380, 282, 380);
+    line(247, 380, 258, 380);
+
     //---------------------------------------TERMINA LETRA N
     //-------------------------------------------------------------LETRA I
     // Dibuja la línea horizontal de la letra I arriba
-    line(297, 380, 310, 380);
+    line(270, 380, 283, 380);
 
 
     //pequenio izquierdo
-    circuloPos(297, 376, 5, 90, 270);
+    circuloPos(270, 376, 5, 90, 270);
 
     //arriba derecha
-    circuloPos(307, 376, 5, -90, 90);
+    circuloPos(280, 376, 5, -90, 90);
     //--------------------------------arriba termina
 
     // Dibuja la línea vertical de la letra I izquierda
-    line(297, 370, 297, 328);
+    line(270, 370, 270, 328);
 
     //abajo 
 
     //pequenia izquierda
-    circuloPos(297, 325, 5, 90, 270);
+    circuloPos(270, 325, 5, 90, 270);
 
     //abajo derecha
-    circuloPos(307, 325, 5, -90, 90);
+    circuloPos(280, 325, 5, -90, 90);
 
     // Dibuja la línea horizontal de la letra I
-    line(297, 320, 307, 320);
+    line(270, 320, 280, 320);
 
     // Dibuja la segunda línea vertical de la letra I derecha
-    line(307, 370, 307, 328);
+    line(280, 370, 280, 328);
+
     //--------------------------------------TERMINA LETRA I
     //-----------------------------------------------------------LETRA O
     // Dibuja el círculo interior de la letra O
-    circuloPos(333, 360, 8, 10, 170);
+    circuloPos(305, 360, 8, 10, 170);
     // Dibuja el círculo exterior de la letra O
-    circuloPos(333, 361, 20, 10, 170);
+    circuloPos(305, 361, 20, 10, 170);
 
     //abajo
     // Dibuja el círculo interior de la letra O
-    circuloPos(333, 340, 8, 180, 360);
+    circuloPos(305, 340, 8, 180, 360);
 
     // Dibuja el círculo exterior de la letra O
-    circuloPos(333, 339, 20, 180, 360);
+    circuloPos(305, 339, 20, 180, 360);
 
     //izquierda 1
-    line(325, 360, 325, 335);
+    line(297, 360, 297, 335);
     //izquierda 2
-    line(313, 363, 313, 340);
+    line(285, 364, 285, 339);
     //derecha 1
-    line(352, 365, 352, 340);
+    line(324, 365, 324, 338);
     //derecha 2
-    line(340, 360, 340, 335);
+    line(312, 360, 312, 335);
+
     //----------------------------TERMINA LETRA O
     //-------------------------------------------------------LETRA N
     //pequenio izquierdo
     //243
-    circuloPos(360, 376, 5, 100, 270);
+    circuloPos(330, 376, 5, 100, 270);
 
     //linea superior 
-    line(360, 380, 377, 380);
+    line(330, 380, 342, 380);
 
     //vertical izquierda ext
-    line(360, 370, 360, 328);
+    line(330, 370, 330, 328);
 
     //pata 1 de la N
-    circuloPos(360, 325, 5, 100, 270);
+    circuloPos(330, 325, 5, 100, 270);
 
     //arriba derecha
-    circuloPos(372, 325, 5, -90, 90);
+    circuloPos(342, 325, 5, -90, 90);
 
     //linea baja pata 1
-    line(360, 320, 372, 320);
+    line(330, 320, 342, 320);
 
     //vertical izquierda derecha
-    line(371, 365, 371, 327);
+    line(342, 355, 342, 327);
 
     // Dibuja la línea diagonal de la letra N superior
-    line(377, 380, 402, 335);
+    line(342, 380, 367, 335);
 
     // Dibuja la línea diagonal de la letra N interior
-    line(372, 365, 392, 325);
+    line(342, 355, 357, 325);
 
-    circuloPos(402, 330, 10, -160, 0);
+    circuloPos(367, 330, 10, -160, 0);
 
     // Dibuja la línea vertical derecha de la letra N externa
-    line(411, 370, 411, 326);
+    line(376, 370, 376, 326);
 
     // Dibuja la línea vertical derecha de la letra N interna
-    line(401, 370, 401, 335);
+    line(366, 370, 366, 335);
     //decoracion de letra derecha
     //pequenio izquierdo
-    circuloPos(401, 376, 5, 95, 275);
+    circuloPos(366, 376, 5, 95, 275);
 
     //arriba derecha
-    circuloPos(412, 376, 5, -90, 90);
+    circuloPos(377, 376, 5, -90, 90);
 
     //linea de cierre 
-    line(400, 380, 412, 380);
+    line(365, 380, 377, 380);
+
     //---------------------------------------TERMINA LETRA N
     //------------------------------------------------------------Letra L
     // Dibuja la línea vertical derecha de la letra N externa
-    line(451, 370, 451, 330);
+    line(410, 370, 410, 330);
 
     // Dibuja la línea vertical derecha de la letra N interna
-    line(441, 370, 441, 329);
+    line(400, 370, 400, 329);
     //decoracion de letra derecha
     //pequenio izquierdo
-    circuloPos(441, 376, 5, 95, 275);
+    circuloPos(400, 376, 5, 95, 275);
 
     //arriba derecha
-    circuloPos(452, 376, 5, -90, 90);
+    circuloPos(411, 376, 5, -90, 90);
 
     //linea de cierre 
-    line(440, 380, 452, 380);
+    line(399, 380, 411, 380);
     //linea horizontal base
-    line(440, 320, 467, 320);
+    line(399, 320, 426, 320);
 
     //adorno base
-    circuloPos(441, 325, 5, 95, 275);
+    circuloPos(400, 325, 5, 95, 275);
 
     //horizontal pequenio
-    line(451, 330, 461, 330);
+    line(410, 330, 420, 330);
 
     //adorno final
-    circuloPos(466, 330, 5, -20, 180);
+    circuloPos(425, 330, 5, -20, 180);
     //linea adorno
-    line(467, 320, 470, 329);
+    line(426, 320, 429, 329);
+
     //--------------------------------TERMINA LA L
     //-----------------------------------------------LETRA I
     // Dibuja la línea horizontal de la letra I arriba
     //297
-    line(477, 380, 490, 380);
+    line(435, 380, 448, 380);
 
 
     //pequenio izquierdo
-    circuloPos(477, 376, 5, 90, 270);
+    circuloPos(435, 376, 5, 90, 270);
 
     //arriba derecha
-    circuloPos(487, 376, 5, -90, 90);
+    circuloPos(445, 376, 5, -90, 90);
     //--------------------------------arriba termina
 
     // Dibuja la línea vertical de la letra I izquierda
-    line(477, 370, 477, 328);
+    line(435, 370, 435, 328);
 
     //abajo 
 
     //pequenia izquierda
-    circuloPos(477, 325, 5, 90, 270);
+    circuloPos(435, 325, 5, 90, 270);
 
     //abajo derecha
-    circuloPos(487, 325, 5, -90, 90);
+    circuloPos(445, 325, 5, -90, 90);
 
     // Dibuja la línea horizontal de la letra I
-    line(477, 320, 487, 320);
+    line(435, 320, 445, 320);
 
     // Dibuja la segunda línea vertical de la letra I derecha
-    line(487, 370, 487, 328);
+    line(445, 370, 445, 328);
+
     //--------------------------------------TERMINA LETRA I
     //----------------------------------------------------------LETRA B
     //ADORNO 1
     //pequenio izquierdoARRIBA
-    circuloPos(500, 376, 5, 90, 270);
+    circuloPos(457, 376, 5, 90, 270);
 
     //LINEA VERTICAL
-    line(500, 371, 500, 330);
+    line(457, 371, 457, 330);
     //pequenio izquierdo abajo
-    circuloPos(500, 326, 5, 90, 270);
+    circuloPos(457, 326, 5, 90, 270);
     //forma la B
-    circuloPos(510, 366, 15, -50, 95);
+    circuloPos(467, 366, 15, -50, 95);
     //abjo
-    circuloPos(513, 338, 18, -95, 70);
+    circuloPos(470, 338, 18, -95, 70);
     //medio pequenios
-     //forma la B
-    circuloPos(510, 365, 5, -95, 95);
+    //forma la B
+    circuloPos(467, 365, 5, -95, 95);
     //abjo
-    circuloPos(513, 338, 8, -110, 110);
+    circuloPos(470, 338, 8, -110, 110);
     //rellenos 
     //arriba
-    line(500, 380, 510, 380);
+    line(457, 380, 465, 380);
     //relleno luna 1
-    line(508,369, 508, 359);
+    line(465, 369, 465, 359);
     //luna grande
-    line(509, 345, 509, 329);
+    line(466, 345, 466, 329);
     //cierre b abajo
-    line(500, 320, 512,320);
+    line(457, 320, 469, 320);
+
     //------------------------TERMINA LETRA B
     //------------------------------------------LETRA E
     //ADORNO 1
     //pequenio izquierdoARRIBA
-    circuloPos(538, 376, 5, 90, 270);
+    circuloPos(492, 376, 5, 90, 270);
 
     //LINEA VERTICAL
-    line(538, 371, 538, 329);
+    line(492, 371, 492, 329);
     //pequenio izquierdo abajo
-    circuloPos(538, 325, 5, 90, 270);
+    circuloPos(492, 325, 5, 90, 270);
     //linea arriba
-    line(538, 380, 570, 380);
+    line(492, 380, 523, 380);
     //linea que une adorno
-    line(569, 380, 569, 370);
+    line(523, 380, 523, 370);
     //adrono superior
-    circuloPos(565, 370, 5, -180, 10);
+    circuloPos(519, 370, 5, -180, 10);
     //completa parte alta
-    line(550, 370, 560, 370);
+    line(504, 370, 516, 370);
     //hacia abajo
-    line(550, 370, 550, 355);
+    line(504, 370, 504, 355);
     //linea media alta
-    line(550, 358, 560, 358);
+    line(504, 357, 516, 357);
     //adorno medio arriba
-    circuloPos(565, 358, 5, 0 ,180);
+    circuloPos(519, 357, 5, 0, 180);
     //une adornos
-    line(569, 357, 569, 346 );
+    line(523, 357, 523, 346);
     //adorno bajo
-    circuloPos(565, 348, 5, -180, 10);
+    circuloPos(519, 348, 5, -180, 10);
     //linea terminna medio
-    line(560, 348, 550, 348);
+    line(514, 348, 504, 348);
     //linea hacia abajo
-    line(550,348, 550, 333);
+    line(504, 348, 504, 333);
     //conecta con adorno
-    line(550, 333, 560, 333);
+    line(504, 333, 514, 333);
     //adorno 
-    circuloPos(565, 333, 5, 0 ,185);
+    circuloPos(519, 333, 5, 0, 185);
     //linea hacia abajo
-    line(569, 332, 569, 320);
+    line(523, 332, 523, 320);
     //linea cierre E
-    line(538, 320, 569, 320);
+    line(492, 320, 523, 320);
+
     //-------------------------------TERMINA E
     //------------------------------------------LETRA R
     //ADORNO 1
     //pequenio izquierdoARRIBA
-    circuloPos(580, 376, 5, 90, 270);
+    circuloPos(531, 376, 5, 90, 270);
+
     //linea de cierre alto
-    line(580, 380, 590, 380);
+    line(531, 380, 541, 380);
     //LINEA VERTICAL
-    line(580, 371, 580, 329);
+    line(531, 371, 531, 329);
     //pequenio izquierdo abajo
-    circuloPos(580, 325, 5, 90, 270);
+    circuloPos(531, 325, 5, 90, 270);
     //pequenia derecha
-    circuloPos(590, 325, 5, -90, 90);
+    circuloPos(541, 325, 5, -90, 90);
     //cierre de pata baja
-    line(580, 320, 590, 320);
-    
+    line(531, 320, 541, 320);
+
     //forma la media luna grande
-    circuloPos(590, 363, 18, -50, 95);
-     //forma la media lua pequenia
-    circuloPos(590, 363, 8, -80, 80);
+    circuloPos(541, 363, 18, -50, 95);
+    //forma la media lua pequenia
+    circuloPos(541, 363, 8, -80, 80);
     //linea de cieere de luna
-    line(590, 370, 590 , 355);
+    line(541, 370, 541, 355);
     //linea hacia arriba
-    line(590,330, 590, 345);
+    line(541, 330, 541, 345);
     //linea transverzal
-    line(590, 345, 600,325);
+    line(541, 345, 553, 323);
     //complemento pata abajo
-    circuloPos(606, 326, 5, 200, 270);
+    circuloPos(557, 326, 5, 200, 270);
     //conntinuacion pata baja
-    line(606, 320, 616, 320);
+    line(557, 320, 567, 320);
     //pequenia pata punta
-    circuloPos(615, 325, 5, -90, 90);
+    circuloPos(566, 325, 5, -90, 90);
     //conntinuacion pata alta
-    line(612, 329, 616, 329);
+    line(563, 329, 567, 329);
     //complemento pata arriba
-    circuloPos(612, 335, 5, 200, 270);
+    circuloPos(563, 335, 5, 200, 270);
     //linea final 
-    line(608, 330, 600, 349);
+    line(559, 330, 551, 349);
+
+    //--------------------------TERMINA R
+    //-------------------------------------LETRA T
+    //ADORNO 1
+    //pequenio izquierdoARRIBA INICIO t PARTE ABAJO
+    circuloPos(563, 370, 4, -180, 0);
+
+    //linea que une
+    line(578, 370, 565, 370);
+    //linea hacia arriba
+    line(559, 370, 560, 380);
+    //adorno superior
+    circuloPos(564, 380, 4, 10, 170);
+
+    //linea de cierre alto
+    line(570, 380, 588, 380);
+
+    //parte de la t derecha
+    //pequenio izquierdoARRIBA INICIO t PARTE ABAJO
+    circuloPos(610, 370, 4, -180, 0);
+    //linea que une no t
+    line(593, 370, 607, 370);
+    //linea hacia arriba
+    line(613, 370, 612, 380);
+    //adorno superior
+    circuloPos(608, 380, 4, 10, 160);
+
+    //linea de cierre alto
+    line(568, 380, 605, 380);
+
+    //LINEA VERTICAL
+    line(578, 370, 578, 329);
+    //pequenio izquierdo abajo
+    circuloPos(578, 325, 5, 90, 270);
+    //pequenia derecha
+    circuloPos(593, 325, 5, -90, 90);
+    //LINEA HACIA ARRIBA 
+    //LINEA VERTICAL
+    line(592, 370, 592, 329);
+
+    //cierre t abajo
+    line(578, 320, 593, 320);
+
+    //--------------------------------TERMINA LA T
+    //-----------------------------------------------LETRA A
+    circuloPos(603, 325, 5, 90, 270);
+    //union de patas
+    line(603, 320, 613, 320);
+    //pequenia derecha
+    circuloPos(613, 325, 5, -90, 90);
+    //linea transverzal hacia arriba
+    line(603, 330, 623, 377);
+    // luna superior
+    circuloPos(628, 375, 5, 20, 150);
+
+    //pata derecha
+    circuloPos(638, 325, 5, 90, 270);
+    //cierres pata 
+    line(635, 320, 653, 320);
+    //pequenia IZQUIERDA
+    circuloPos(651, 325, 5, -90, 90);
+    //linea de union transverzal derecha
+    line(650, 330, 632, 377);
+    //triangulo medio izquierda
+    line(626, 360, 623, 350);
+    //triangulo medio derecha
+    line(626, 362, 631, 350);
+    //union triangulo
+    line(624, 350, 632, 350);
+
+    //complemento abajo
+    line(620, 340, 633, 340);
+    //union con patas
+    //derecha
+    line(619, 340, 612, 329);
+    //izquierda
+    line(633, 340, 638, 328);
+
+    //-----------------------------TERMINA A
+    //-----------------------------------------------------------------------------Letra D INICIA
+    // Dibuja la línea horizontal superior de la letra D
+    //12
+    line(660, 370, 660, 330);
+
+    //parte grande
+    // Dibuja la curva derecha de la letra D
+    circuloPos(666, 350, 30, -100, 100);
+
+
+    //parte pequenia
+    // Dibuja la curva derecha de la letra D
+    circuloPos(670, 350, 15, -95, 95);
+
+    // Dibuja la línea horizontl al medioo
+    line(668, 335, 668, 365);
+    //decorcion superior
+    circuloPos(662, 375, 5, 90, 260);
+    //decoracion inferior
+    circuloPos(662, 325, 5, 100, 275);
+
+    glFlush();
+    //-----------------------------------Letra D TERMINA
+   
 }
+
+
+
+
+void init() {
+    glClearColor(1.0, 1.0, 1.0, 1.0); // Establece el color de fondo en negro
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, 700, 0, 700); // Establece la coordenada de la ventana
+}
+
+void display(){
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(252, 227, 0); // Establece el color del lápiz en dorado
+
+    
+   
+    drawD();
+
+    GLfloat fillColor[3] = {1.000, 0.843, 0.000}; // Color rojo
+    GLfloat targetColor[3] = {1.0, 1.0, 1.0}; // Color blanco
+    glPointSize(1);
+    // Llamar a la función floodFill para rellenar un área
+    floodFill(11, 322, fillColor, targetColor);
+     
+
+    floodFill(55, 322, fillColor, targetColor);
+
+    floodFill(85, 360, fillColor, targetColor);
+    //s
+      
+    floodFill(125, 315, fillColor, targetColor);
+    //u
+    floodFill(160, 366, fillColor, targetColor);
+    //n
+      
+    floodFill(212, 366, fillColor, targetColor);
+    //i
+      
+    floodFill(270, 366, fillColor, targetColor);
+    //o
+   
+    floodFill(305, 360, fillColor, targetColor);
+    //n
+      
+    floodFill(330, 366, fillColor, targetColor);
+    //l
+  
+    floodFill(400, 366, fillColor, targetColor);
+    //i
+    
+    floodFill(435, 366, fillColor, targetColor);
+    //b
+    
+    floodFill(457, 366, fillColor, targetColor);
+    //e
+   
+    floodFill(492, 366, fillColor, targetColor);
+    //r
+    
+    floodFill(531, 366, fillColor, targetColor);
+    //t
+     
+    floodFill(563, 366, fillColor, targetColor);
+    //a
+   
+
+    floodFill(627, 364, fillColor, targetColor);
+     
+    //d
+    floodFill(662, 323, fillColor, targetColor);
+      for (int i = 0; i < filledPixelsCount; i++) {
+        glColor3fv(fillColor);
+        glPointSize(1.0);
+        glBegin(GL_POINTS);
+        glVertex2i(filledPixels[i].x, filledPixels[i].y - 2);
+        glEnd();
+    }
+    line(0, 150, 700, 150);
+    line(0, 250, 700, 250);
+    line(0, 425, 700, 425);
+    line(0, 525, 700, 525);
+    GLfloat fillColor2[3] = {0.0, 0.0, 1.0};
+    //GLfloat targetColor2[3] = {1.0, 1.0, 1.0};
+    floodFill(0, 151, fillColor2, targetColor);
+
+    floodFill(0, 426, fillColor2, targetColor);
+    for (int i = 0; i < filledPixelsCount; i++) {
+        glColor3fv(fillColor2);
+        glPointSize(1.0);
+        glBegin(GL_POINTS);
+        glVertex2i(filledPixels[i].x, filledPixels[i].y -2 );
+        glEnd();
+        exit(0);
+        
+    }
+    glFlush();
+}
+
 
 void circuloPos(int puntoX, int puntoY, int radio, int iterador, int numeroveces) {
     glBegin(GL_POINTS);
@@ -499,27 +767,6 @@ void line(int x1, int y1, int x2, int y2) {
     }
     glEnd();
 }
-
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    /*
-        glColor3f(252, 227, 0); // Establece el color del lápiz en dorado
-     */
-    glColor3f(0, 0, 0);
-    glPointSize(1); // Establece el tamaño del lápiz
-    drawD(); // Dibuja la letra D
-
-    glFlush();
-}
-
-void init() {
-    glClearColor(1.0, 1.0, 1.0, 1.0); // Establece el color de fondo en negro
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0, 700, 0, 700); // Establece la coordenada de la ventana
-}
-
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
